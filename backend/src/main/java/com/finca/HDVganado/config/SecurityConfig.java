@@ -39,7 +39,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "https://TU-USUARIO.github.io"  
+                "https://Yeipi-hub-coder.github.io"  
         ));
 
         config.setAllowedMethods(List.of(
