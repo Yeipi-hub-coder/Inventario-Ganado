@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel principal · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/forms.css">
+</head>
+<body data-root="" data-page="panel" data-title="Panel principal">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Panel principal</h1><p class="muted">Resumen del inventario actual de la finca.</p></div>
+      <section class="card"><h2>Accesos rápidos</h2>
+        <div class="quick">
+          <a class="btn btn-primary" href="pages/registrar.html">Registrar un animal</a>
+          <a class="btn btn-secondary" href="pages/inventario.html">Consultar el inventario</a>
+          <a class="btn btn-secondary" href="pages/buscar.html">Buscar un animal</a>
+        </div></section>
+      <div id="stats" class="stats" aria-live="polite"></div>
+      <section class="card"><h2>Distribución por categoría</h2><div id="categorias" aria-live="polite"></div></section>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body data-root="../" data-page="configuracion" data-title="Configuración">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Configuración</h1></div>
+      <section class="card"><h2>Conexión con el backend</h2>
+        <dl class="dl"><div><dt>Dirección de la API</dt><dd id="api-url"></dd></div><div><dt>Estado</dt><dd id="api-estado">Comprobando…</dd></div></dl>
+        <p class="muted" style="margin-top:.8rem">La dirección se define únicamente en <code>js/api.js</code> (constante <code>API_BASE_URL</code>); no puede cambiarse desde esta pantalla.</p>
+        <div id="https-aviso" class="alert alert-warn" hidden>Esta página usa HTTPS pero la API usa HTTP: el navegador bloqueará las peticiones. Publique el backend con HTTPS.</div>
+        <button class="btn btn-secondary" type="button" id="probar">Probar conexión</button></section>
+      <section class="card"><h2>Seguridad</h2>
+        <div class="alert alert-warn">Esta versión no incluye inicio de sesión. Cualquier persona que conozca la dirección del sistema podría usarlo hasta que el backend implemente autenticación.</div>
+        <p class="muted">Cuando el backend exija autenticación, cada petición se autorizará allí: el frontend no guarda contraseñas ni secretos.</p></section>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="../js/api.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/configuracion.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body data-root="../" data-page="inventario" data-title="Inventario">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Inventario actual</h1><p class="muted">Animales que están en la finca hoy (última versión de cada uno).</p></div>
+      <section class="card">
+        <form id="filtros" class="filters" novalidate>
+          <div class="field"><label for="q">Buscar en la tabla</label><input id="q" type="search" placeholder="Código, nombre, raza…" autocomplete="off"></div>
+          <div class="field"><label for="categoria">Categoría</label><select id="categoria" name="categoria"><option value="">Todas</option></select></div>
+          <div class="field"><label for="sexo">Sexo</label><select id="sexo" name="sexo"><option value="">Todos</option><option value="HEMBRA">Hembra</option><option value="MACHO">Macho</option></select></div>
+          <div class="field"><label for="raza">Raza</label><select id="raza" name="raza"><option value="">Todas</option></select></div>
+          <div class="field"><label for="inicio">Ingreso desde</label><input id="inicio" name="inicio" type="date"></div>
+          <div class="field"><label for="fin">Ingreso hasta</label><input id="fin" name="fin" type="date"></div>
+          <div class="filter-actions">
+            <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+            <button class="btn btn-secondary" type="button" id="limpiar">Limpiar filtros</button>
+            <button class="btn btn-ghost" type="button" id="csv">Descargar CSV</button>
+          </div>
+        </form>
+        <p id="filtro-msg" hidden></p>
+      </section>
+      <section class="card">
+        <div class="result-head"><h2>Resultados <span id="count" class="badge"></span></h2></div>
+        <p id="q-note" class="muted" hidden>La búsqueda de texto solo cambia lo que ve en pantalla. El CSV contiene todos los resultados de los filtros aplicados.</p>
+        <div id="resultado" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="../js/api.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/inventario.js"></script>
+</body>
+</html>

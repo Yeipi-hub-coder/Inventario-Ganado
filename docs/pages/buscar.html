@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buscar animal · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body data-root="../" data-page="buscar" data-title="Buscar animal">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Buscar animal</h1></div>
+      <section class="card"><h2>Por código</h2>
+        <form id="por-codigo" class="inline-form" novalidate>
+          <div class="field"><label for="codigo">Código del animal (Codigo3)</label><input id="codigo" type="text" list="dl-codigos" autocomplete="off" aria-describedby="codigo-err"><p class="field-error" id="codigo-err" hidden></p></div>
+          <button class="btn btn-primary" type="submit">Abrir ficha</button>
+        </form></section>
+      <section class="card"><h2>Por fecha de ingreso</h2>
+        <form id="por-fecha" class="filters" novalidate>
+          <div class="field"><label for="inicio">Fecha inicial <span class="req" aria-hidden="true">*</span></label><input id="inicio" type="date" aria-required="true"></div>
+          <div class="field"><label for="fin">Fecha final <span class="req" aria-hidden="true">*</span></label><input id="fin" type="date" aria-required="true"></div>
+          <div class="filter-actions">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+            <button class="btn btn-ghost" type="button" id="csv" disabled>Descargar CSV</button>
+          </div>
+        </form>
+        <p id="fecha-msg" hidden></p></section>
+      <section class="card" id="res-card" hidden>
+        <div class="result-head"><h2>Resultados <span id="count" class="badge"></span></h2></div>
+        <div id="resultado" aria-live="polite"></div></section>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="../js/api.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/buscar.js"></script>
+</body>
+</html>

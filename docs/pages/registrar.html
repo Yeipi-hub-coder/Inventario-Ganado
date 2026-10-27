@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrar animal · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body data-root="../" data-page="registrar" data-title="Registrar animal">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Registrar animal</h1><p class="muted">Los campos con <span class="req">*</span> son obligatorios. El código interno de versión lo genera la base de datos.</p></div>
+      <div id="exito" class="alert alert-ok" hidden></div>
+      <form id="form-animal" novalidate>
+        <div id="campos"></div>
+        <p id="form-msg" hidden></p>
+        <div class="form-actions">
+          <button class="btn btn-secondary" type="button" id="limpiar">Limpiar formulario</button>
+          <button class="btn btn-primary" type="submit">Registrar animal</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="../js/api.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/registrar.js"></script>
+</body>
+</html>

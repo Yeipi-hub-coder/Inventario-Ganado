@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Historial de animales · HDVganado</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body data-root="../" data-page="historial" data-title="Historial de animales">
+<div class="shell">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main">
+    <header id="topbar" class="topbar"></header>
+    <main id="content" class="content">
+      <div class="page-head"><h1>Historial de animales</h1><p class="muted">Todas las versiones de un animal. El historial es de consulta: no se edita.</p></div>
+      <section class="card">
+        <form id="hist-form" class="inline-form" novalidate>
+          <div class="field"><label for="codigo">Código del animal (Codigo3)</label><input id="codigo" type="text" list="dl-codigos" autocomplete="off" aria-describedby="codigo-err"><p class="field-error" id="codigo-err" hidden></p></div>
+          <button class="btn btn-primary" type="submit">Consultar historial</button>
+          <button class="btn btn-ghost" type="button" id="csv" disabled>Descargar CSV</button>
+        </form>
+      </section>
+      <div id="resultado" aria-live="polite"></div>
+    </main>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="../js/api.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/historial.js"></script>
+</body>
+</html>

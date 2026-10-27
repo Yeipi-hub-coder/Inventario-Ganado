@@ -1,0 +1,18 @@
+/* HDVganado · Formularios */
+.field{display:flex;flex-direction:column;gap:.3rem}
+label{font-weight:600;font-size:.9rem;color:var(--g900)}
+.req{color:var(--danger)}
+input,select,textarea{width:100%;min-height:42px;padding:.55rem .7rem;font:inherit;color:var(--text);background:#fff;border:1px solid #b5c2b8;border-radius:8px}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--g500);outline:3px solid #cfe3d3}
+[aria-invalid=true]{border-color:var(--danger);background:#fff8f7}
+.field-error{margin:0;color:var(--danger);font-size:.85rem}
+fieldset.section{margin:0 0 1.1rem;padding:1rem 1.1rem 1.2rem;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+legend{padding:0 .5rem;font-family:var(--serif);font-weight:700;font-size:1.1rem;color:var(--g900)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+.grid .wide{grid-column:1/-1}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.9rem;align-items:end}
+.filter-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.6rem}
+.form-actions{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:flex-end;margin-top:.5rem}
+.inline-form{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
+.inline-form .field{flex:1;min-width:200px}
