@@ -4,7 +4,7 @@
    No existe ningún campo en la interfaz para cambiarla.
    ========================================================================== */
 const API_BASE_URL = 'https://inventario-ganado.onrender.com';   // Producción: 'https://api.su-dominio.com'
-const API_TIMEOUT_MS = 20000;
+const API_TIMEOUT_MS = 60000;
 /* Solo para desarrollo: si es true, permite entrar aunque el backend NO exija credenciales
    (en ese caso el login no protege nada). Déjelo en false. */
 const AUTH_ALLOW_OPEN_BACKEND = false;
