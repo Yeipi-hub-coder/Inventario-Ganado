@@ -222,5 +222,10 @@ public class AnimalController {
         );
     }
 
+    @GetMapping("/progenitores")
+    public ResponseEntity<List<HojaDeVidaAnimal>> obtenerProgenitores() {
+        return ResponseEntity.ok(animalService.obtenerTodosLosAnimales());
+    }
+
 }
 

@@ -85,7 +85,6 @@ const ICONS = {
   registrar: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
   buscar: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
   historial: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  reportes: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/>',
   configuracion: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
   home: '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',
   menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
@@ -99,7 +98,6 @@ const NAV = [
   { key: 'registrar', label: 'Registrar animal', href: 'pages/registrar.html', icon: 'registrar' },
   { key: 'buscar', label: 'Buscar animal', href: 'pages/buscar.html', icon: 'buscar' },
   { key: 'historial', label: 'Historial de animales', href: 'pages/historial.html', icon: 'historial' },
-  { key: 'reportes', label: 'Reportes y exportaciones', href: 'pages/reportes.html', icon: 'reportes' },
   { key: 'configuracion', label: 'Configuración', href: 'pages/configuracion.html', icon: 'configuracion' }
 ];
 
@@ -210,18 +208,18 @@ const FIELDS = [
   { key: 'codigo2', label: 'Código secundario', type: 'text', section: 0 },
   { key: 'nombreAnimal', label: 'Nombre', type: 'text', section: 0 },
   { key: 'sexo', label: 'Sexo', type: 'select', options: SEXOS, section: 0, required: true },
-  { key: 'raza', label: 'Raza', type: 'text', list: 'dl-razas', section: 0 },
-  { key: 'categoria', label: 'Categoría', type: 'text', list: 'dl-categorias', section: 0 },
+  { key: 'raza', label: 'Raza', type: 'text', list: 'lista-razas', section: 2 },  
+  { key: 'categoria', label: 'Categoría', type: 'text', list: 'lista-categorias', section: 2 },
   { key: 'fechaIngresoFinca', label: 'Fecha de ingreso a la finca', type: 'date', past: true, section: 1 },
-  { key: 'fechaNacidoEnFinca', label: 'Fecha de nacimiento (nacido en la finca)', type: 'date', past: true, section: 1 },
+  { key: 'fechaNacidoEnFinca', label: 'Fecha de nacimiento (finca)', type: 'date', past: true, section: 1 },
   { key: 'estaEnFinca', label: '¿Está en la finca?', type: 'select', options: SI_NO, def: 'SI', section: 1, required: true, noEdit: true },
   { key: 'estaEnOtrasFincas', label: '¿Está en otras fincas?', type: 'select', options: SI_NO, def: 'NO', section: 1 },
   { key: 'carneOLeche', label: 'Tipo de producción', type: 'select', options: [['CARNE', 'Carne'], ['LECHE', 'Leche'], ['DOBLE PROPOSITO', 'Doble propósito']], section: 1 },
   { key: 'vendido', label: 'Salida (campo Vendido)', type: 'text', section: 1, noForm: true, noEdit: true },
   { key: 'pesoAlNacerOEntrarKilos', label: 'Peso al nacer o entrar (kg)', type: 'number', unit: 'kg', section: 2 },
-  { key: 'edad', label: 'Edad', type: 'number', section: 2 },
-  { key: 'padre', label: 'Padre', type: 'text', section: 2 },
-  { key: 'madre', label: 'Madre', type: 'text', section: 2 },
+  { key: 'edad', label: 'Edad (años)', type: 'number', int: true, section: 2 },
+  { key: 'padre', label: 'Padre', type: 'autocomplete', options: [], section: 2 },
+  { key: 'madre', label: 'Madre', type: 'autocomplete', options: [], section: 2 },
   { key: 'descripcion', label: 'Descripción', type: 'textarea', section: 2 },
   { key: 'cantidadLeche', label: 'Cantidad de leche', type: 'number', section: 3 },
   { key: 'eficiencia', label: 'Eficiencia', type: 'number', section: 3 },
@@ -246,14 +244,43 @@ function fieldHtml(f, values, prefix) {
   const v = values ? toInput(val(values, f.key), f) : (f.def ?? '');
   const common = `id="${id}" name="${f.key}" aria-describedby="${id}-err"${f.required ? ' aria-required="true"' : ''}`;
   let ctl;
-  if (f.type === 'select') {
+  if (f.type === 'autocomplete') {
+    ctl = `
+        <div class="autocomplete">
+            <input
+                id="${id}-buscar"
+                type="text"
+                autocomplete="off"
+                placeholder="Escribe el código o nombre..."
+                aria-label="Buscar ${esc(f.label)}"
+            >
+            <input
+                id="${id}"
+                name="${f.key}"
+                type="hidden"
+                value="${esc(v)}"
+            >
+            <div
+                id="${id}-sugerencias"
+                class="autocomplete-sugerencias"
+                hidden
+            ></div>
+        </div>
+    `;  
+  } else if (f.type === 'select') {
     ctl = `<select ${common}><option value="">— Seleccione —</option>${f.options.map(o => {
       const [ov, ol] = Array.isArray(o) ? o : [o, o];
-      return `<option value="${esc(ov)}"${String(v) === ov ? ' selected' : ''}>${esc(ol)}</option>`; }).join('')}</select>`;
-  } else if (f.type === 'textarea') ctl = `<textarea ${common} rows="3">${esc(v)}</textarea>`;
-  else if (f.type === 'number') ctl = `<input ${common} type="number" inputmode="decimal" min="0" step="${f.int ? 1 : 'any'}" value="${esc(v)}">`;
-  else if (f.type === 'date') ctl = `<input ${common} type="date"${f.past ? ` max="${todayIso()}"` : ''} value="${esc(v)}">`;
-  else ctl = `<input ${common} type="text"${f.list ? ` list="${f.list}" autocomplete="off"` : ''} value="${esc(v)}">`;
+      return `<option value="${esc(ov)}"${String(v) === ov ? ' selected' : ''}>${esc(ol)}</option>`;
+    }).join('')}</select>`;
+  } else if (f.type === 'textarea') {
+    ctl = `<textarea ${common} rows="3">${esc(v)}</textarea>`;
+  } else if (f.type === 'number') {
+    ctl = `<input ${common} type="number" inputmode="decimal" min="0" step="${f.int ? 1 : 'any'}" value="${esc(v)}">`;
+  } else if (f.type === 'date') {
+    ctl = `<input ${common} type="date"${f.past ? ` max="${todayIso()}"` : ''} value="${esc(v)}">`;
+  } else {
+    ctl = `<input ${common} type="text"${f.list ? ` list="${f.list}" autocomplete="off"` : ''} value="${esc(v)}">`;
+  }
   return `<div class="field${f.type === 'textarea' ? ' wide' : ''}"><label for="${id}">${esc(f.label)}${f.required ? ' <span class="req" aria-hidden="true">*</span>' : ''}</label>${ctl}<p class="field-error" id="${id}-err" hidden></p></div>`;
 }
 function renderFormFields(container, { values = null, edit = false, prefix = 'f' } = {}) {
@@ -269,7 +296,11 @@ function readForm(form, { original = null } = {}) {
     if (f.noForm || (original && f.noEdit)) return;
     const el = form.elements[f.key]; if (!el) return;
     const raw = String(el.value).trim();
-    if (raw === '') { if (f.required) errors[f.key] = original ? 'Este campo no puede quedar vacío.' : 'Este campo es obligatorio.'; return; }
+    if (raw === '') {
+    if (f.required) { errors[f.key] = original ? 'Este campo no puede quedar vacío.' : 'Este campo es obligatorio.'; return; }
+    // null y "campo ausente" son iguales para el backend; en campos de texto se envía "" para vaciarlos
+    if (original && !isEmpty(val(original, f.key)) && (f.type === 'text' || f.type === 'textarea')) payload[f.key] = '';
+    return;}
     let v = raw;
     if (f.type === 'number') {
       v = Number(raw.replace(',', '.'));
@@ -307,22 +338,60 @@ function showErrors(form, errors) {
 
 /* ---------- Sugerencias reales (razas, categorías, códigos) tomadas del inventario ---------- */
 let _sugg = null;
+
 async function loadSuggestions() {
-  if (_sugg) return _sugg;
-  try {
-    const rows = asArray(await Api.get('/api/animales'));
-    const uniq = k => [...new Set(rows.map(r => val(r, k)).filter(x => !isEmpty(x)).map(x => String(x).trim()))].sort((a, b) => a.localeCompare(b, 'es'));
-    _sugg = { razas: uniq('raza'), categorias: uniq('categoria'), codigos: uniq('codigo3') };
-    return _sugg;
-  } catch { return { razas: [], categorias: [], codigos: [] }; }
+    if (_sugg) return _sugg;
+
+    try {
+        const respuesta = await Api.get('/api/animales');
+        const animales = asArray(respuesta);
+
+        const razas = [...new Set(
+            animales
+                .map(animal => String(val(animal, 'raza') ?? '').trim())
+                .filter(Boolean)
+        )];
+
+        const categorias = [...new Set(
+            animales
+                .map(animal => String(val(animal, 'categoria') ?? '').trim())
+                .filter(Boolean)
+        )];
+
+        _sugg = { razas, categorias };
+
+        return _sugg;
+    } catch (error) {
+        console.error('Error cargando razas y categorías:', error);
+        return { razas: [], categorias: [] };
+    }
 }
-function applySuggestions(s) {
-  ['razas', 'categorias', 'codigos'].forEach(k => {
-    let dl = document.getElementById('dl-' + k);
-    if (!dl) { dl = document.createElement('datalist'); dl.id = 'dl-' + k; document.body.append(dl); }
-    dl.innerHTML = s[k].map(x => `<option value="${esc(x)}"></option>`).join('');
-  });
+
+async function applySuggestions() {
+    const datos = await loadSuggestions();
+
+    function crearLista(id, valores) {
+        let lista = document.getElementById(id);
+
+        if (!lista) {
+            lista = document.createElement('datalist');
+            lista.id = id;
+            document.body.appendChild(lista);
+        }
+
+        lista.replaceChildren();
+
+        valores.forEach(valor => {
+            const opcion = document.createElement('option');
+            opcion.value = valor;
+            lista.appendChild(opcion);
+        });
+    }
+
+    crearLista('lista-razas', datos.razas);
+    crearLista('lista-categorias', datos.categorias);
 }
+
 
 /* ---------- Tabla de animales y ficha ---------- */
 const BASE_COLS = [

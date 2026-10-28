@@ -116,10 +116,10 @@ public class HojaDeVidaAnimal {
     private BigDecimal pesoAlNacerOEntrarKilos;
 
     @Column(name = "Padre")
-    private Integer padre;
+    private String padre;
 
     @Column(name = "Madre")
-    private Integer madre;
+    private String madre;
 
     @Column(name = "CantidadLeche")
     private String cantidadLeche;
@@ -155,10 +155,10 @@ public class HojaDeVidaAnimal {
     private LocalDate fechaPalpada;
 
     @Column(name = "TiempoPrenhes")
-    private String tiempoPrenhes;
+    private Integer tiempoPrenhes;
 
     @Column(name = "AproximacionProximoParto")
-    private LocalDateTime aproximacionProximoParto;
+    private LocalDate aproximacionProximoParto;
 
     @Column(name = "CarneOLeche")
     private String carneOLeche;

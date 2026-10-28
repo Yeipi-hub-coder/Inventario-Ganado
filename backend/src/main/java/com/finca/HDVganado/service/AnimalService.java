@@ -5,6 +5,8 @@ import com.finca.HDVganado.model.HojaDeVidaAnimal;
 import com.finca.HDVganado.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,6 +40,8 @@ public class AnimalService {
         }
 
         animal.setCodigo1(null);
+
+        calcularProximoParto(animal);
 
         return animalRepository.save(animal);
     }
@@ -113,6 +117,9 @@ public class AnimalService {
         HojaDeVidaAnimal nuevaVersion = copiarAnimal(actual);
 
         aplicarCambios(nuevaVersion, cambios);
+
+        // Calcular la fecha aproximada del próximo parto
+        calcularProximoParto(nuevaVersion);
 
         nuevaVersion.setCodigo1(null);
 
@@ -286,22 +293,58 @@ public class AnimalService {
             destino.setRaza(cambios.getRaza());
         }
 
-        if (cambios.getNumeroPartos() != null) {
-            destino.setNumeroPartos(cambios.getNumeroPartos());
+        // Registrar un nuevo parto cuando cambia la fecha.
+        if (cambios.getFechaUltimoParto() != null) {
+            LocalDate fechaAnterior = destino.getFechaUltimoParto();
+            LocalDate fechaNueva = cambios.getFechaUltimoParto();
+
+            if (fechaAnterior == null) {
+                destino.setFechaUltimoParto(fechaNueva);
+
+                int partosActuales = destino.getNumeroPartos() == null
+                        ? 0
+                        : destino.getNumeroPartos();
+
+                destino.setNumeroPartos(partosActuales + 1);
+            } else if (fechaNueva.isAfter(fechaAnterior)) {
+                // Una fecha posterior representa un nuevo parto.
+                destino.setFechaUltimoParto(fechaNueva);
+
+                int partosActuales = destino.getNumeroPartos() == null
+                        ? 0
+                        : destino.getNumeroPartos();
+
+                destino.setNumeroPartos(partosActuales + 1);
+
+                // Días transcurridos entre el parto anterior y el nuevo.
+                int dias = (int) java.time.temporal.ChronoUnit.DAYS
+                        .between(fechaAnterior, fechaNueva);
+
+                destino.setDiasAbiertos(dias);
+            } else if (fechaNueva.equals(fechaAnterior)) {
+                // No cambia la fecha: no se suma otro parto.
+                destino.setFechaUltimoParto(fechaNueva);
+            } else {
+                throw new IllegalArgumentException(
+                        "La nueva fecha del último parto no puede ser anterior a la fecha registrada."
+                );
+            }
         }
 
-        if (cambios.getFechaUltimoParto() != null) {
-            destino.setFechaUltimoParto(
-                    cambios.getFechaUltimoParto()
-            );
+        // Permitir cambios manuales de estos campos solo cuando no se
+        // haya cambiado la fecha del último parto.
+        if (cambios.getFechaUltimoParto() == null) {
+            if (cambios.getNumeroPartos() != null) {
+                destino.setNumeroPartos(cambios.getNumeroPartos());
+            }
+
+            if (cambios.getDiasAbiertos() != null) {
+                destino.setDiasAbiertos(cambios.getDiasAbiertos());
+            }
         }
 
         if (cambios.getSexoParto() != null) {
             destino.setSexoParto(cambios.getSexoParto());
-        }
-
-        if (cambios.getDiasAbiertos() != null) {
-            destino.setDiasAbiertos(cambios.getDiasAbiertos());
         }
 
         if (cambios.getFechaPalpada() != null) {
@@ -369,6 +412,77 @@ public class AnimalService {
 
         return animalRepository.filtrarInventario(
                 categoria, sexo, raza, inicio, fin
+        );
+    }
+
+    private void validarProgenitores(HojaDeVidaAnimal animal) {
+        validarProgenitor(animal.getPadre(), animal.getCodigo3(), "Padre");
+        validarProgenitor(animal.getMadre(), animal.getCodigo3(), "Madre");
+    }
+
+    private void validarProgenitor(
+            String codigoProgenitor,
+            String codigoAnimal,
+            String campo) {
+
+        if (codigoProgenitor == null || codigoProgenitor.isBlank()) {
+            return;
+        }
+
+        codigoProgenitor = codigoProgenitor.trim();
+
+        if (codigoProgenitor.equalsIgnoreCase(codigoAnimal)) {
+            throw new IllegalArgumentException(
+                    campo + ": un animal no puede ser su propio progenitor."
+            );
+        }
+
+        final String codigo = codigoProgenitor;
+
+        HojaDeVidaAnimal progenitor = animalRepository
+                .findFirstByCodigo3OrderByCodigo1Desc(codigo)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        campo + ": no existe un animal con Codigo3 " + codigo
+                ));
+
+        if ("Padre".equals(campo)
+                && !"MACHO".equalsIgnoreCase(progenitor.getSexo())) {
+            throw new IllegalArgumentException(
+                    "El animal seleccionado como padre debe ser MACHO."
+            );
+        }
+
+        if ("Madre".equals(campo)
+                && !"HEMBRA".equalsIgnoreCase(progenitor.getSexo())) {
+            throw new IllegalArgumentException(
+                    "El animal seleccionado como madre debe ser HEMBRA."
+            );
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<HojaDeVidaAnimal> obtenerTodosLosAnimales() {
+        return animalRepository.todasLasUltimasVersiones();
+    }
+
+    private void calcularProximoParto(HojaDeVidaAnimal animal) {
+        LocalDate fechaPalpada = animal.getFechaPalpada();
+        Integer tiempoPrenhes = animal.getTiempoPrenhes();
+
+        if (fechaPalpada == null || tiempoPrenhes == null) {
+            return;
+        }
+
+        int mesesRestantes = 9 - tiempoPrenhes;
+
+        if (mesesRestantes < 0) {
+            throw new IllegalArgumentException(
+                    "El tiempo de preñez no puede superar los 9 meses."
+            );
+        }
+
+        animal.setAproximacionProximoParto(
+                fechaPalpada.plusMonths(mesesRestantes)
         );
     }
 }

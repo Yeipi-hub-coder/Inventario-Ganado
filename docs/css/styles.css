@@ -101,3 +101,97 @@ dialog::backdrop{background:rgba(20,35,26,.55)}
 .toasts{position:fixed;right:1rem;bottom:1rem;display:grid;gap:.5rem;z-index:100;max-width:min(420px,92vw)}
 .toast{padding:.75rem 1rem;border-radius:8px;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.25);font-weight:500}
 .toast-ok{background:var(--g700)}.toast-error{background:var(--danger)}.toast-info{background:#37566e}
+
+/* ===== AUTOCOMPLETADO DE PADRE Y MADRE ===== */
+
+.autocomplete {
+    position: relative;
+    width: 100%;
+}
+
+.autocomplete input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    border: 1px solid #d1d9d2;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #24352a;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.autocomplete input[type="text"]:focus {
+    border-color: #2f7545;
+    box-shadow: 0 0 0 3px rgba(47, 117, 69, 0.13);
+}
+
+/* Lista desplegable */
+.autocomplete-sugerencias {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    max-height: 240px;
+    overflow-y: auto;
+
+    background-color: #fff;
+    border: 1px solid #d5ded7;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Cada opción */
+.autocomplete-opcion {
+    display: block;
+    width: 100%;
+    padding: 11px 14px;
+
+    border: none;
+    border-bottom: 1px solid #edf1ed;
+    background-color: #fff;
+    color: #24352a;
+
+    text-align: left;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
+}
+
+.autocomplete-opcion:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-opcion:hover,
+.autocomplete-opcion:focus {
+    background-color: #edf6ef;
+    color: #205b32;
+    outline: none;
+}
+
+/* Mensaje cuando no hay coincidencias */
+.autocomplete-vacio {
+    padding: 12px 14px;
+    color: #737b74;
+    font-size: 13px;
+}
+
+/* Barra de desplazamiento de las sugerencias */
+.autocomplete-sugerencias::-webkit-scrollbar {
+    width: 7px;
+}
+
+.autocomplete-sugerencias::-webkit-scrollbar-thumb {
+    background-color: #c5d2c7;
+    border-radius: 10px;
+}
+
+.autocomplete-sugerencias::-webkit-scrollbar-track {
+    background-color: #f5f7f5;
+    border-radius: 10px;
+}

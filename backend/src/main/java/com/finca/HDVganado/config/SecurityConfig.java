@@ -39,7 +39,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "https://Yeipi-hub-coder.github.io"  
+                "https://Yeipi-hub-coder.github.io",
+                "http://127.0.0.1:5500"
         ));
 
         config.setAllowedMethods(List.of(
