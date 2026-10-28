@@ -3,9 +3,8 @@
    Este es el ÚNICO lugar donde se define la dirección del backend.
    No existe ningún campo en la interfaz para cambiarla.
    ========================================================================== */
-// const API_BASE_URL = 'https://inventario-ganado.onrender.com';   // Producción: 'https://api.su-dominio.com'
-const API_BASE_URL = 'http://localhost:8080';   // Desarrollo: 'http://localhost:8080'
-const API_TIMEOUT_MS = 60000;
+const API_BASE_URL = 'https://inventario-ganado.onrender.com';
+const API_TIMEOUT_MS = 50000;
 /* Solo para desarrollo: si es true, permite entrar aunque el backend NO exija credenciales
    (en ese caso el login no protege nada). Déjelo en false. */
 const AUTH_ALLOW_OPEN_BACKEND = false;
@@ -159,16 +158,16 @@ const Api = (() => {
     return name.replace(/[\\/:*?"<>|]/g, '_');
   }
 
-  /** Descarga el CSV generado por el backend (parámetro formato=csv). */
-  async function downloadCsv(path, query, fallbackName = 'reporte.csv') {
+  /** Descarga el CSV generado por el backend (parámetro formato=xlsx). */
+  async function downloadCsv(path, query, fallbackName = 'reporte.xlsx') {
     requireSession();
     const headers = { Accept: 'text/csv, application/octet-stream;q=0.9, */*;q=0.5' };
     if (Auth.header()) headers.Authorization = Auth.header();
-    const res = await doFetch(buildUrl(path, { ...query, formato: 'csv' }), { method: 'GET', headers });
+    const res = await doFetch(buildUrl(path, { ...query, formato: 'xlsx' }), { method: 'GET', headers });
     if (!res.ok) { handleUnauthorized(res); throw toApiError(res.status, await parseBody(res)); }
     const ct = res.headers.get('Content-Type') || '';
     if (/json|html/i.test(ct)) {
-      throw new ApiError('Esta consulta no está disponible en formato CSV en el servidor.', { status: res.status });
+      throw new ApiError('Esta consulta no está disponible en formato xlsx en el servidor.', { status: res.status });
     }
     const blob = await res.blob();
     if (!blob.size) throw new ApiError('El servidor devolvió un archivo vacío.', { status: res.status });

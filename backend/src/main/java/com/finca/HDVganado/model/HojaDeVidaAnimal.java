@@ -45,7 +45,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "aproximacionProximoParto",
         "carneOLeche",
         "fechaRegistroVersion",
-        "categoria"
+        "categoria",
+        "vacunas"
 })
 @Entity
 @Table(name = "HojaDeVidaAnimal")
@@ -169,4 +170,7 @@ public class HojaDeVidaAnimal {
 
     @Column(name = "Categoria")
     private String categoria;
+
+    @Column(name = "Vacunas", columnDefinition = "TEXT")
+    private String vacunas;
 }

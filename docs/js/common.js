@@ -191,7 +191,7 @@ async function confirmDialog({ title, body, confirmText = 'Confirmar', cls = 'bt
     { label: 'Cancelar', value: 'no', cls: 'btn-secondary' }, { label: confirmText, value: 'yes', cls }] });
   return r === 'yes';
 }
-async function exportCsv(btn, path, query, fallbackName) {
+async function exportXlsx(btn, path, query, fallbackName) {
   await withBusy(btn, 'Descargando…', async () => {
     try { toast(`Archivo descargado: ${await Api.downloadCsv(path, query, fallbackName)}`, 'ok'); }
     catch (e) { toast(errorMessage(e), 'error'); }
@@ -229,7 +229,8 @@ const FIELDS = [
   { key: 'diasAbiertos', label: 'Días abiertos', type: 'number', int: true, section: 3 },
   { key: 'fechaPalpada', label: 'Fecha de palpación', type: 'date', past: true, section: 3 },
   { key: 'tiempoPrenhes', label: 'Tiempo de preñez', type: 'number', section: 3 },
-  { key: 'aproximacionProximoParto', label: 'Aproximación del próximo parto', type: 'date', section: 3 }
+  { key: 'aproximacionProximoParto', label: 'Aproximación del próximo parto', type: 'date', section: 3 },
+  { key: 'vacunas', label: 'Vacunas', type: 'textarea', section: 2 }
 ];
 const SYS_LABELS = { codigo1: 'Identificador de versión (Codigo1)', fecharegistroversion: 'Fecha de registro de la versión' };
 const fieldLabel = k => (FIELDS.find(f => f.key.toLowerCase() === k.toLowerCase()) || {}).label || SYS_LABELS[k.toLowerCase()] || k;

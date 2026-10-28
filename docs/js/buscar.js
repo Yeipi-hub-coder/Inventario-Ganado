@@ -1,5 +1,5 @@
 'use strict';
-/* Búsqueda por código y por fecha de ingreso: GET /api/animales/buscar/ingreso */
+/* Búsqueda por código y por fecha de nacimiento: GET /api/animales/buscar/nacimiento */
 (function () {
   const out = $('#resultado'), card = $('#res-card'), msg = $('#fecha-msg'), csvBtn = $('#csv');
   let last = null;
@@ -21,13 +21,13 @@
     card.hidden = false; showLoading(out, 'Buscando…'); $('#count').textContent = '';
     await withBusy($('button[type=submit]', e.target), 'Buscando…', async () => {
       try {
-        const rows = asArray(await Api.get('/api/animales/buscar/ingreso', p));
+        const rows = asArray(await Api.get('/api/animales/buscar/nacimiento', p));
         last = p; csvBtn.disabled = false;
         $('#count').textContent = String(rows.length);
-        if (!rows.length) showEmpty(out, 'Sin resultados', 'No hay animales con fecha de ingreso en ese rango.');
+        if (!rows.length) showEmpty(out, 'Sin resultados', 'No hay animales con fecha de nacimiento en ese rango.');
         else out.innerHTML = animalTable(rows);
       } catch (ex) { csvBtn.disabled = true; showError(out, ex); }
     });
   });
-  csvBtn.onclick = () => last && exportCsv(csvBtn, '/api/animales/buscar/ingreso', last, `animales_ingreso_${last.inicio}_${last.fin}.csv`);
+  csvBtn.onclick = () => last && exportXlsx(csvBtn, '/api/animales/buscar/nacimiento', last, `animales_nacimiento_${last.inicio}_${last.fin}.xlsx`);
 })();

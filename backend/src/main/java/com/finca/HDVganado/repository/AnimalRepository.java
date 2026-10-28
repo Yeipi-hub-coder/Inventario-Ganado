@@ -53,6 +53,22 @@ public interface AnimalRepository
     );
 
     @Query(value = """
+        SELECT a.*
+        FROM HojaDeVidaAnimal a
+        INNER JOIN (
+            SELECT Codigo3, MAX(Codigo1) AS UltimoCodigo
+            FROM HojaDeVidaAnimal
+            GROUP BY Codigo3
+        ) v ON a.Codigo1 = v.UltimoCodigo
+        WHERE a.FechaNacidoEnFinca BETWEEN :inicio AND :fin
+        ORDER BY a.Codigo3
+        """, nativeQuery = true)
+    List<HojaDeVidaAnimal> buscarUltimasVersionesPorNacimiento(
+            @Param("inicio") LocalDate inicio,
+            @Param("fin") LocalDate fin
+    );
+
+    @Query(value = """
     SELECT a.*
     FROM HojaDeVidaAnimal a
     INNER JOIN (

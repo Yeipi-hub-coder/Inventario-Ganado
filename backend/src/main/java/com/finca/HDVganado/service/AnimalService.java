@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AnimalService {
@@ -94,23 +95,33 @@ public class AnimalService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<HojaDeVidaAnimal> buscarPorNacimiento(
+            LocalDate inicio,
+            LocalDate fin) {
+
+        validarFechas(inicio, fin);
+
+        return animalRepository.buscarUltimasVersionesPorNacimiento(
+                inicio, fin
+        );
+    }
+
     // Editar creando una nueva versión del animal.
     // Los campos enviados como null permanecen sin cambios.
-    @Transactional
+
     public HojaDeVidaAnimal actualizar(
             String codigo3,
-            HojaDeVidaAnimal cambios) {
+            HojaDeVidaAnimal cambios,
+            Set<String> fechasBorradas) {
 
         HojaDeVidaAnimal actual = obtenerActual(codigo3);
-
         validarAnimalActivo(actual);
 
         if (cambios.getEstaEnFinca() != null
                 || cambios.getVendido() != null) {
-
             throw new IllegalArgumentException(
-                    "No puedes cambiar el estado de un animal mediante una actualización general. "
-                            + "Utiliza los métodos de venta o fallecimiento."
+                    "No puedes modificar estos campos directamente."
             );
         }
 
@@ -118,13 +129,35 @@ public class AnimalService {
 
         aplicarCambios(nuevaVersion, cambios);
 
-        // Calcular la fecha aproximada del próximo parto
-        calcularProximoParto(nuevaVersion);
+        if (fechasBorradas.contains("fechaIngresoFinca")) {
+            nuevaVersion.setFechaIngresoFinca(null);
+        }
+
+        if (fechasBorradas.contains("fechaNacidoEnFinca")) {
+            nuevaVersion.setFechaNacidoEnFinca(null);
+        }
+
+        if (fechasBorradas.contains("fechaUltimoParto")) {
+            nuevaVersion.setFechaUltimoParto(null);
+        }
+
+        if (fechasBorradas.contains("fechaPalpada")) {
+            nuevaVersion.setFechaPalpada(null);
+        }
+
+        if (fechasBorradas.contains("aproximacionProximoParto")) {
+            nuevaVersion.setAproximacionProximoParto(null);
+        }
 
         nuevaVersion.setCodigo1(null);
 
+        if (!fechasBorradas.contains("aproximacionProximoParto")) {
+            calcularProximoParto(nuevaVersion);
+        }
+
         return animalRepository.save(nuevaVersion);
     }
+
 
     // Registrar la venta de un animal.
     @Transactional
@@ -217,6 +250,7 @@ public class AnimalService {
 
         copia.setCarneOLeche(origen.getCarneOLeche());
         copia.setCategoria(origen.getCategoria());
+        copia.setVacunas(origen.getVacunas());
 
         // FechaRegistroVersion la genera MySQL automáticamente.
         // Codigo1 también lo genera MySQL.

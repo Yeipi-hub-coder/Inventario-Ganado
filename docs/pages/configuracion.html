@@ -18,12 +18,11 @@
       <div class="page-head"><h1>Configuración</h1></div>
       <section class="card"><h2>Conexión con el backend</h2>
         <dl class="dl"><div><dt>Dirección de la API</dt><dd id="api-url"></dd></div><div><dt>Estado</dt><dd id="api-estado">Comprobando…</dd></div></dl>
-        <p class="muted" style="margin-top:.8rem">La dirección se define únicamente en <code>js/api.js</code> (constante <code>API_BASE_URL</code>); no puede cambiarse desde esta pantalla.</p>
         <div id="https-aviso" class="alert alert-warn" hidden>Esta página usa HTTPS pero la API usa HTTP: el navegador bloqueará las peticiones. Publique el backend con HTTPS.</div>
         <button class="btn btn-secondary" type="button" id="probar">Probar conexión</button></section>
       <section class="card"><h2>Seguridad</h2>
-        <div class="alert alert-warn">Esta versión no incluye inicio de sesión. Cualquier persona que conozca la dirección del sistema podría usarlo hasta que el backend implemente autenticación.</div>
-        <p class="muted">Cuando el backend exija autenticación, cada petición se autorizará allí: el frontend no guarda contraseñas ni secretos.</p></section>
+        <div class="alert alert-warn">Esta versión no incluye manejo de usuarios, solo de administrador y estas no se pueden configurar directamente desde esta página.</div>
+        <p class="muted">Cuando se requiera el manejo de usuarios, se realizarán las configuraciones necesarias para este.</p></section>
     </main>
   </div>
 </div>

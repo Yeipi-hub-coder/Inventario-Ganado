@@ -90,7 +90,7 @@
                     </button>
 
                     <button type="button" class="btn btn-ghost" id="b-csv">
-                        Exportar ficha CSV
+                        Exportar ficha Excel
                     </button>
                 </div>
             </section>
@@ -143,7 +143,7 @@
         $('#b-muerte').onclick = () => closeLife('muerte');
 
         $('#b-csv').onclick = e => {
-            exportCsv(e.currentTarget, base, {}, `ficha_${c3}.csv`);
+            exportXlsx(e.currentTarget, base, {}, `ficha_${c3}.xlsx`);
         };
     }
 
@@ -314,13 +314,48 @@
 
         formMessage(msg, 'error', '');
 
-        const { payload, errors } = readForm(form, { original: animal });
+        
+const { payload, errors } = readForm(form, { original: animal });
 
-        if (Object.keys(errors).length) {
-            showErrors(form, errors);
-            formMessage(msg, 'error', 'Revise los campos marcados.');
-            return;
-        }
+// Detectar fechas que estaban llenas y fueron borradas.
+const camposFecha = [
+    'fechaIngresoFinca',
+    'fechaNacidoEnFinca',
+    'fechaUltimoParto',
+    'fechaPalpada',
+    'aproximacionProximoParto'
+];
+
+for (const campo of camposFecha) {
+    const control = form.elements[campo];
+
+    if (!control) continue;
+
+    const valorAnterior = animal[campo];
+    const valorNuevo = control.value.trim();
+
+    if (
+        valorAnterior != null &&
+        String(valorAnterior).trim() !== '' &&
+        valorNuevo === ''
+    ) {
+        payload[campo] = null;
+    }
+}
+
+if (Object.keys(errors).length) {
+  showErrors(form, errors);
+  formMessage(msg, 'error', 'Revise los campos marcados.');
+  return;
+}
+
+clearErrors(form);
+
+if (!Object.keys(payload).length) {
+  formMessage(msg, 'info', 'No hay cambios para guardar.');
+  return;
+}
+
 
         clearErrors(form);
 

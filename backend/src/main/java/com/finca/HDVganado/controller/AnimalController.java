@@ -15,6 +15,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.annotation.Validated;
 import com.finca.HDVganado.validation.Registro;
 import org.springframework.web.bind.annotation.RequestParam;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,10 +29,12 @@ public class AnimalController {
 
     private final AnimalService animalService;
     private final ExportacionCsvService exportacionCsvService;
+    private final ObjectMapper objectMapper;
 
-    public AnimalController(AnimalService animalService, ExportacionCsvService exportacionCsvService) {
+    public AnimalController(AnimalService animalService, ExportacionCsvService exportacionCsvService, ObjectMapper objectMapper) {
         this.animalService = animalService;
         this.exportacionCsvService = exportacionCsvService;
+        this.objectMapper = objectMapper;
     }
 
     // Consultar el inventario actual.
@@ -95,16 +101,58 @@ public class AnimalController {
         );
     }
 
+    @GetMapping("/buscar/nacimiento")
+    public ResponseEntity<?> buscarPorNacimiento(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fin,
+            @RequestParam(defaultValue = "json") String formato) {
+
+        return responderConsulta(
+                animalService.buscarPorNacimiento(inicio, fin),
+                formato,
+                "busqueda_por_nacimiento"
+        );
+    }
+
     // Modificar un animal creando una nueva versión.
+
     @PatchMapping("/{codigo3}")
     public ResponseEntity<HojaDeVidaAnimal> actualizar(
             @PathVariable String codigo3,
-            @RequestBody HojaDeVidaAnimal cambios) {
+            @RequestBody JsonNode json) throws Exception {
+
+        Set<String> fechasBorradas = new HashSet<>();
+
+        String[] camposFecha = {
+                "fechaIngresoFinca",
+                "fechaNacidoEnFinca",
+                "fechaUltimoParto",
+                "fechaPalpada",
+                "aproximacionProximoParto"
+        };
+
+        for (String campo : camposFecha) {
+            if (json.has(campo)) {
+                JsonNode valor = json.get(campo);
+
+                if (valor == null || valor.isNull()
+                        || (valor.isTextual()
+                        && valor.asText().isBlank())) {
+                    fechasBorradas.add(campo);
+                }
+            }
+        }
+
+        HojaDeVidaAnimal cambios =
+                objectMapper.treeToValue(json, HojaDeVidaAnimal.class);
 
         return ResponseEntity.ok(
-                animalService.actualizar(codigo3, cambios)
+                animalService.actualizar(
+                        codigo3, cambios, fechasBorradas
+                )
         );
     }
+
 
     // Registrar la venta de un animal.
     @PostMapping("/{codigo3}/venta")
@@ -179,12 +227,13 @@ public class AnimalController {
     }
 
 
+
     private ResponseEntity<?> responderConsulta(
             Object datos,
             String formato,
             String nombreArchivo) {
 
-        if ("csv".equalsIgnoreCase(formato)) {
+        if ("xlsx".equalsIgnoreCase(formato)) {
             List<HojaDeVidaAnimal> animales;
 
             if (datos instanceof HojaDeVidaAnimal animal) {
@@ -199,16 +248,16 @@ public class AnimalController {
                 );
             }
 
-            String contenido =
+            byte[] contenido =
                     exportacionCsvService.exportar(animales);
 
             return ResponseEntity.ok()
                     .header(
                             HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + nombreArchivo + ".csv\""
+                            "attachment; filename=\"" + nombreArchivo + ".xlsx\""
                     )
                     .contentType(MediaType.parseMediaType(
-                            "text/csv; charset=UTF-8"
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     ))
                     .body(contenido);
         }
@@ -218,9 +267,10 @@ public class AnimalController {
         }
 
         throw new IllegalArgumentException(
-                "El formato debe ser json o csv."
+                "El formato debe ser xlsx o json."
         );
     }
+
 
     @GetMapping("/progenitores")
     public ResponseEntity<List<HojaDeVidaAnimal>> obtenerProgenitores() {
