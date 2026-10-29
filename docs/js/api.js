@@ -161,7 +161,7 @@ const Api = (() => {
   /** Descarga el CSV generado por el backend (parámetro formato=xlsx). */
   async function downloadCsv(path, query, fallbackName = 'reporte.xlsx') {
     requireSession();
-    const headers = { Accept: 'text/csv, application/octet-stream;q=0.9, */*;q=0.5' };
+    const headers = { Accept: 'text/xlsx, application/octet-stream;q=0.9, */*;q=0.5' };
     if (Auth.header()) headers.Authorization = Auth.header();
     const res = await doFetch(buildUrl(path, { ...query, formato: 'xlsx' }), { method: 'GET', headers });
     if (!res.ok) { handleUnauthorized(res); throw toApiError(res.status, await parseBody(res)); }

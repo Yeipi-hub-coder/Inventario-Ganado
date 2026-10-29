@@ -49,7 +49,7 @@
     modal({ title: `Versión ${val(v, 'codigo1') ?? ''} de ${last.codigo}`, wide: true, body: `<div class="detail-flat">${renderDetail(v)}</div>` });
   });
   form.addEventListener('submit', e => { e.preventDefault(); load(input.value.trim()); });
-  csvBtn.onclick = () => last && exportCsv(csvBtn, `/api/animales/${enc(last.codigo)}/historial`, {}, `historial_${last.codigo}.csv`);
+  csvBtn.onclick = () => last && exportXlsx(csvBtn, `/api/animales/${enc(last.codigo)}/historial`, {}, `historial_${last.codigo}.xlsx`);
 
   const pre = new URLSearchParams(location.search).get('codigo');
   if (pre) { input.value = pre; load(pre.trim()); }

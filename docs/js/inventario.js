@@ -42,7 +42,7 @@
   form.addEventListener('submit', e => { e.preventDefault(); load(); });
   $('#limpiar').onclick = () => { form.reset(); load(); };
   $('#q').addEventListener('input', render);
-  csvBtn.onclick = () => exportCsv(csvBtn, pathFor(current), current,
-    Object.keys(current).length ? 'inventario_filtrado.csv' : 'inventario_actual.csv');
+  csvBtn.onclick = () => exportXlsx(csvBtn, pathFor(current), current,
+    Object.keys(current).length ? 'inventario_filtrado.xlsx' : 'inventario_actual.xlsx');
   load();
 })();
