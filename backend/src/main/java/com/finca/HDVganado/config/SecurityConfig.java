@@ -40,7 +40,8 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "https://Yeipi-hub-coder.github.io",
-                "http://127.0.0.1:5500"
+                "http://127.0.0.1:5500",
+                "https://yeipi-hub-coder.github.io"
         ));
 
         config.setAllowedMethods(List.of(
