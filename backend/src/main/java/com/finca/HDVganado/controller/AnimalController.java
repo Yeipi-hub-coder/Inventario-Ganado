@@ -128,7 +128,8 @@ public class AnimalController {
                 "fechaNacidoEnFinca",
                 "fechaUltimoParto",
                 "fechaPalpada",
-                "aproximacionProximoParto"
+                "aproximacionProximoParto",
+                "tiempoPrenhes"
         };
 
         for (String campo : camposFecha) {

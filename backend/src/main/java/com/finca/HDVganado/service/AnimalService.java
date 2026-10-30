@@ -6,9 +6,7 @@ import com.finca.HDVganado.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
-import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Set;
 
@@ -110,6 +108,7 @@ public class AnimalService {
     // Editar creando una nueva versión del animal.
     // Los campos enviados como null permanecen sin cambios.
 
+
     public HojaDeVidaAnimal actualizar(
             String codigo3,
             HojaDeVidaAnimal cambios,
@@ -149,14 +148,23 @@ public class AnimalService {
             nuevaVersion.setAproximacionProximoParto(null);
         }
 
+        if (fechasBorradas.contains("tiempoPrenhes")) {
+            nuevaVersion.setTiempoPrenhes(null);
+            nuevaVersion.setAproximacionProximoParto(null);
+        }
+
         nuevaVersion.setCodigo1(null);
 
-        if (!fechasBorradas.contains("aproximacionProximoParto")) {
+        if (!fechasBorradas.contains("aproximacionProximoParto")
+                && !fechasBorradas.contains("tiempoPrenhes")) {
             calcularProximoParto(nuevaVersion);
         }
 
+        calcularEdad(nuevaVersion);
+
         return animalRepository.save(nuevaVersion);
     }
+
 
 
     // Registrar la venta de un animal.
@@ -518,5 +526,16 @@ public class AnimalService {
         animal.setAproximacionProximoParto(
                 fechaPalpada.plusMonths(mesesRestantes)
         );
+    }
+
+    private void calcularEdad(HojaDeVidaAnimal animal) {
+        if (animal.getFechaNacidoEnFinca() != null) {
+            int edad = Period.between(
+                    animal.getFechaNacidoEnFinca(),
+                    LocalDate.now()
+            ).getYears();
+
+            animal.setEdad(edad);
+        }
     }
 }

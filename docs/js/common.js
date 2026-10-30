@@ -291,36 +291,100 @@ function renderFormFields(container, { values = null, edit = false, prefix = 'f'
   }).join('');
 }
 /** Lee y valida el formulario. Con `original` (edición) solo devuelve los campos modificados. */
+
 function readForm(form, { original = null } = {}) {
   const payload = {}, errors = {};
+
   FIELDS.forEach(f => {
     if (f.noForm || (original && f.noEdit)) return;
-    const el = form.elements[f.key]; if (!el) return;
+
+    const el = form.elements[f.key];
+    if (!el) return;
+
     const raw = String(el.value).trim();
+
     if (raw === '') {
-    if (f.required) { errors[f.key] = original ? 'Este campo no puede quedar vacío.' : 'Este campo es obligatorio.'; return; }
-    // null y "campo ausente" son iguales para el backend; en campos de texto se envía "" para vaciarlos
-    if (original && !isEmpty(val(original, f.key)) && (f.type === 'text' || f.type === 'textarea')) payload[f.key] = '';
-    return;}
+      if (f.required) {
+        errors[f.key] = original
+          ? 'Este campo no puede quedar vacío.'
+          : 'Este campo es obligatorio.';
+        return;
+      }
+
+      // Permitir borrar el tiempo de preñez al editar.
+      if (
+        original &&
+        f.key === 'tiempoPrenhes' &&
+        !isEmpty(val(original, f.key))
+      ) {
+        payload[f.key] = null;
+        return;
+      }
+
+      // Permitir vaciar campos de texto.
+      if (
+        original &&
+        !isEmpty(val(original, f.key)) &&
+        (f.type === 'text' || f.type === 'textarea')
+      ) {
+        payload[f.key] = '';
+      }
+
+      return;
+    }
+
     let v = raw;
+
     if (f.type === 'number') {
       v = Number(raw.replace(',', '.'));
-      if (!Number.isFinite(v) || v < 0) { errors[f.key] = 'Ingrese un número válido (0 o mayor).'; return; }
-      if (f.int && !Number.isInteger(v)) { errors[f.key] = 'Debe ser un número entero.'; return; }
+
+      if (!Number.isFinite(v) || v < 0) {
+        errors[f.key] = 'Ingrese un número válido (0 o mayor).';
+        return;
+      }
+
+      if (f.int && !Number.isInteger(v)) {
+        errors[f.key] = 'Debe ser un número entero.';
+        return;
+      }
+
     } else if (f.type === 'date') {
-      if (!isValidDate(raw)) { errors[f.key] = 'Fecha no válida (formato AAAA-MM-DD).'; return; }
-      if (f.past && raw > todayIso()) { errors[f.key] = 'La fecha no puede ser futura.'; return; }
-    } else if (f.type === 'select' && !f.options.some(o => (Array.isArray(o) ? o[0] : o) === raw)) {
-      errors[f.key] = 'Seleccione una opción de la lista.'; return;
+      if (!isValidDate(raw)) {
+        errors[f.key] = 'Fecha no válida (formato AAAA-MM-DD).';
+        return;
+      }
+
+      if (f.past && raw > todayIso()) {
+        errors[f.key] = 'La fecha no puede ser futura.';
+        return;
+      }
+
+    } else if (
+      f.type === 'select' &&
+      !f.options.some(o => (Array.isArray(o) ? o[0] : o) === raw)
+    ) {
+      errors[f.key] = 'Seleccione una opción de la lista.';
+      return;
     }
+
     if (original) {
       const prev = toInput(val(original, f.key), f);
-      if (f.type === 'number' ? (prev !== '' && Number(prev) === v) : prev === raw) return;   // sin cambios
+
+      if (
+        f.type === 'number'
+          ? (prev !== '' && Number(prev) === v)
+          : prev === raw
+      ) {
+        return;
+      }
     }
+
     payload[f.key] = v;
   });
+
   return { payload, errors };
 }
+
 function clearErrors(form) {
   $$('[aria-invalid]', form).forEach(e => e.removeAttribute('aria-invalid'));
   $$('.field-error', form).forEach(p => { p.hidden = true; p.textContent = ''; });

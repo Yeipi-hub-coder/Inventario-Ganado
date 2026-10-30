@@ -3,7 +3,8 @@
    Este es el ÚNICO lugar donde se define la dirección del backend.
    No existe ningún campo en la interfaz para cambiarla.
    ========================================================================== */
-const API_BASE_URL = 'https://inventario-ganado.onrender.com';
+//const API_BASE_URL = 'https://inventario-ganado.onrender.com';
+const API_BASE_URL = 'http://localhost:8080';
 const API_TIMEOUT_MS = 50000;
 /* Solo para desarrollo: si es true, permite entrar aunque el backend NO exija credenciales
    (en ese caso el login no protege nada). Déjelo en false. */

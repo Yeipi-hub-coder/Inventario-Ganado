@@ -315,16 +315,16 @@
         formMessage(msg, 'error', '');
 
         
-const { payload, errors } = readForm(form, { original: animal });
+    const { payload, errors } = readForm(form, { original: animal });
 
-// Detectar fechas que estaban llenas y fueron borradas.
-const camposFecha = [
-    'fechaIngresoFinca',
-    'fechaNacidoEnFinca',
-    'fechaUltimoParto',
-    'fechaPalpada',
-    'aproximacionProximoParto'
-];
+    // Detectar fechas que estaban llenas y fueron borradas.
+    const camposFecha = [
+        'fechaIngresoFinca',
+        'fechaNacidoEnFinca',
+        'fechaUltimoParto',
+        'fechaPalpada',
+        'aproximacionProximoParto'
+    ];
 
 for (const campo of camposFecha) {
     const control = form.elements[campo];
