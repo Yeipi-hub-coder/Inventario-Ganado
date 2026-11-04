@@ -27,18 +27,20 @@
     if (!fecha || !isValidDate(fecha) || fecha > todayIso()) return '';
 
     const [anio, mes, dia] = fecha.split('-').map(Number);
+
+    const nacimiento = new Date(anio, mes - 1, dia);
     const hoy = new Date();
-    let anios = hoy.getFullYear() - anio;
 
-    if (
-      hoy.getMonth() + 1 < mes ||
-      (hoy.getMonth() + 1 === mes && hoy.getDate() < dia)
-    ) {
-      anios--;
-    }
+    const diasTranscurridos = Math.floor(
+        (new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) - nacimiento)
+        / (1000 * 60 * 60 * 24)
+    );
 
-    return Math.max(0, anios);
-  }
+    const diasPorAnio = 365.2425;
+
+    return Math.round((diasTranscurridos / diasPorAnio) * 100) / 100;
+}
+
 
   function actualizarEdad() {
     if (!fechaNacimiento || !edad) return;
