@@ -2,7 +2,7 @@
 /* Inventario actual: GET /api/animales  ·  con filtros: GET /api/animales/filtrar */
 (async function () {
   const form = $('#filtros'), out = $('#resultado'), msg = $('#filtro-msg'), count = $('#count'), csvBtn = $('#csv');
-  const KEYS = ['categoria', 'sexo', 'raza', 'inicio', 'fin'];
+  const KEYS = ['categoria', 'sexo', 'raza', 'inicio', 'fin', 'nacimientoDesde', 'nacimientoHasta'];
   let rows = [], current = {};
   const norm = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const params = () => {
@@ -23,7 +23,10 @@
     else out.innerHTML = animalTable(shown);
   }
   async function load() {
-    const p = params(), err = rangeError(p.inicio, p.fin);
+    const p = params();
+    const errIngreso = rangeError(p.inicio, p.fin);
+    const errNacimiento = rangeError(p.nacimientoDesde, p.nacimientoHasta);
+    const err = errIngreso || errNacimiento;
     if (err) { formMessage(msg, 'error', err); return; }
     formMessage(msg, 'error', '');
     current = p; showLoading(out, 'Cargando inventario…'); count.textContent = '';
