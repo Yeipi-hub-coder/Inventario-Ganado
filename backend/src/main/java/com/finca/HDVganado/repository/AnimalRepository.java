@@ -85,6 +85,8 @@ public interface AnimalRepository
       AND (:raza IS NULL OR a.Raza = :raza)
       AND (:inicio IS NULL OR a.FechaIngresoFinca >= :inicio)
       AND (:fin IS NULL OR a.FechaIngresoFinca <= :fin)
+      AND (:nacimientoDesde IS NULL OR a.FechaNacidoEnFinca >= :nacimientoDesde)
+      AND (:nacimientoHasta IS NULL OR a.FechaNacidoEnFinca <= :nacimientoHasta)
     ORDER BY a.Codigo3
     """, nativeQuery = true)
     List<HojaDeVidaAnimal> filtrarInventario(
@@ -93,7 +95,9 @@ public interface AnimalRepository
             @Param("sexo") String sexo,
             @Param("raza") String raza,
             @Param("inicio") LocalDate inicio,
-            @Param("fin") LocalDate fin
+            @Param("fin") LocalDate fin,
+            @Param("nacimientoDesde") LocalDate nacimientoDesde,
+            @Param("nacimientoHasta") LocalDate nacimientoHasta
     );
 
 
