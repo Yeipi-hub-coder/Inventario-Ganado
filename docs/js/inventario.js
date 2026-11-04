@@ -5,7 +5,12 @@
   const KEYS = ['categoria', 'sexo', 'raza', 'inicio', 'fin'];
   let rows = [], current = {};
   const norm = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const params = () => { const p = {}; KEYS.forEach(k => { const v = form.elements[k].value.trim(); if (v) p[k] = v; }); return p; };
+  const params = () => {
+    const p = {};
+    KEYS.forEach(k => { const v = form.elements[k].value.trim(); if (v) p[k] = v; });
+    if (form.elements.estado.value === 'VENDIDAS') p.estado = 'VENDIDAS';
+    return p;
+  };
   const pathFor = p => Object.keys(p).length ? '/api/animales/filtrar' : '/api/animales';
 
   function render() {
