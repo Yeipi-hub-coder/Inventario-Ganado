@@ -217,7 +217,7 @@ const FIELDS = [
   { key: 'carneOLeche', label: 'Tipo de producción', type: 'select', options: [['CARNE', 'Carne'], ['LECHE', 'Leche'], ['DOBLE PROPOSITO', 'Doble propósito']], section: 1 },
   { key: 'vendido', label: 'Salida (campo Vendido)', type: 'text', section: 1, noForm: true, noEdit: true },
   { key: 'pesoAlNacerOEntrarKilos', label: 'Peso al nacer o entrar (kg)', type: 'number', unit: 'kg', section: 2 },
-  { key: 'edad', label: 'Edad (años)', type: 'number', int: true, section: 2 },
+  { key: 'edad', label: 'Edad (años)', type: 'number', section: 2 },
   { key: 'padre', label: 'Padre', type: 'autocomplete', options: [], section: 2 },
   { key: 'madre', label: 'Madre', type: 'autocomplete', options: [], section: 2 },
   { key: 'descripcion', label: 'Descripción', type: 'textarea', section: 2 },
