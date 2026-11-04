@@ -279,6 +279,37 @@
         });
     }
 
+    function actualizarEdadDesdeNacimiento(form) {
+        const fechaNacimiento = form.elements.fechaNacidoEnFinca;
+        const edad = form.elements.edad;
+
+        if (!fechaNacimiento || !edad) return;
+
+        const fecha = fechaNacimiento.value;
+
+        if (!fecha) {
+            edad.readOnly = false;
+            return;
+        }
+
+        edad.readOnly = true;
+
+        const partes = fecha.split('-').map(Number);
+        if (partes.length !== 3 || partes.some(Number.isNaN)) return;
+
+        const hoy = new Date();
+        let anios = hoy.getFullYear() - partes[0];
+
+        if (
+            hoy.getMonth() + 1 < partes[1] ||
+            (hoy.getMonth() + 1 === partes[1] && hoy.getDate() < partes[2])
+        ) {
+            anios--;
+        }
+
+        if (anios >= 0) edad.value = anios;
+    }
+
     async function openEdit() {
         const panel = $('#panel-edicion');
 
@@ -286,6 +317,12 @@
             values: animal,
             edit: true,
             prefix: 'ed'
+        });
+
+        const form = $('#form-edicion');
+        actualizarEdadDesdeNacimiento(form);
+        form.elements.fechaNacidoEnFinca.addEventListener('change', () => {
+            actualizarEdadDesdeNacimiento(form);
         });
 
         panel.hidden = false;
