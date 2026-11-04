@@ -447,7 +447,9 @@ public class AnimalService {
             String sexo,
             String raza,
             LocalDate inicio,
-            LocalDate fin) {
+            LocalDate fin,
+            LocalDate nacimientoDesde,
+            LocalDate nacimientoHasta) {
 
         if (!"ACTUAL".equals(estado) && !"VENDIDAS".equals(estado)) {
             throw new IllegalArgumentException("El estado debe ser ACTUAL o VENDIDAS.");
@@ -455,12 +457,20 @@ public class AnimalService {
 
         if (inicio != null && fin != null && inicio.isAfter(fin)) {
             throw new IllegalArgumentException(
-                    "La fecha inicial no puede ser posterior a la fecha final."
+                    "La fecha inicial de ingreso no puede ser posterior a la fecha final."
+            );
+        }
+
+        if (nacimientoDesde != null && nacimientoHasta != null
+                && nacimientoDesde.isAfter(nacimientoHasta)) {
+            throw new IllegalArgumentException(
+                    "La fecha inicial de nacimiento no puede ser posterior a la fecha final."
             );
         }
 
         return animalRepository.filtrarInventario(
-                estado, categoria, sexo, raza, inicio, fin
+                estado, categoria, sexo, raza, inicio, fin,
+                nacimientoDesde, nacimientoHasta
         );
     }
 
