@@ -209,6 +209,7 @@ public class AnimalController {
 
     @GetMapping("/filtrar")
     public ResponseEntity<?> filtrarInventario(
+            @RequestParam(defaultValue = "ACTUAL") String estado,
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String sexo,
             @RequestParam(required = false) String raza,
@@ -220,7 +221,7 @@ public class AnimalController {
 
         return responderConsulta(
                 animalService.filtrarInventario(
-                        categoria, sexo, raza, inicio, fin
+                        estado, categoria, sexo, raza, inicio, fin
                 ),
                 formato,
                 "inventario_filtrado"
