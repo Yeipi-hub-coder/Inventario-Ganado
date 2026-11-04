@@ -440,11 +440,16 @@ public class AnimalService {
     }
 
     public List<HojaDeVidaAnimal> filtrarInventario(
+            String estado,
             String categoria,
             String sexo,
             String raza,
             LocalDate inicio,
             LocalDate fin) {
+
+        if (!"ACTUAL".equals(estado) && !"VENDIDAS".equals(estado)) {
+            throw new IllegalArgumentException("El estado debe ser ACTUAL o VENDIDAS.");
+        }
 
         if (inicio != null && fin != null && inicio.isAfter(fin)) {
             throw new IllegalArgumentException(
@@ -453,7 +458,7 @@ public class AnimalService {
         }
 
         return animalRepository.filtrarInventario(
-                categoria, sexo, raza, inicio, fin
+                estado, categoria, sexo, raza, inicio, fin
         );
     }
 
