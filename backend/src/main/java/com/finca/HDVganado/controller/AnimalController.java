@@ -217,11 +217,16 @@ public class AnimalController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate nacimientoDesde,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate nacimientoHasta,
             @RequestParam(defaultValue = "json") String formato) {
 
         return responderConsulta(
                 animalService.filtrarInventario(
-                        estado, categoria, sexo, raza, inicio, fin
+                        estado, categoria, sexo, raza, inicio, fin,
+                        nacimientoDesde, nacimientoHasta
                 ),
                 formato,
                 "inventario_filtrado"
