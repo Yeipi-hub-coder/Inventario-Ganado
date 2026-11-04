@@ -76,8 +76,10 @@ public interface AnimalRepository
         FROM HojaDeVidaAnimal
         GROUP BY Codigo3
     ) v ON a.Codigo1 = v.UltimoCodigo
-    WHERE a.EstaEnFinca = 'SI'
-      AND a.Vendido IS NULL
+    WHERE (
+        (:estado = 'VENDIDAS' AND a.Vendido = 'Vendido')
+        OR (:estado = 'ACTUAL' AND a.EstaEnFinca = 'SI' AND a.Vendido IS NULL)
+      )
       AND (:categoria IS NULL OR a.Categoria = :categoria)
       AND (:sexo IS NULL OR a.Sexo = :sexo)
       AND (:raza IS NULL OR a.Raza = :raza)
@@ -86,6 +88,7 @@ public interface AnimalRepository
     ORDER BY a.Codigo3
     """, nativeQuery = true)
     List<HojaDeVidaAnimal> filtrarInventario(
+            @Param("estado") String estado,
             @Param("categoria") String categoria,
             @Param("sexo") String sexo,
             @Param("raza") String raza,
