@@ -134,8 +134,9 @@ public class HojaDeVidaAnimal {
     @Column(name = "NombreAnimal")
     private String nombreAnimal;
 
-    @Min(value = 0, message = "La edad no puede ser negativa.")
-    private Integer edad;
+    @DecimalMin(value = "0.0", message = "La edad no puede ser negativa.")
+    @Column(name = "edad", precision = 6, scale = 2)
+    private BigDecimal edad;
 
     @Column(name = "Raza")
     private String raza;
