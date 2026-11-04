@@ -294,20 +294,22 @@
 
         edad.readOnly = true;
 
-        const partes = fecha.split('-').map(Number);
-        if (partes.length !== 3 || partes.some(Number.isNaN)) return;
-
-        const hoy = new Date();
-        let anios = hoy.getFullYear() - partes[0];
-
-        if (
-            hoy.getMonth() + 1 < partes[1] ||
-            (hoy.getMonth() + 1 === partes[1] && hoy.getDate() < partes[2])
-        ) {
-            anios--;
+        if (!isValidDate(fecha) || fecha > todayIso()) {
+            edad.value = '';
+            return;
         }
 
-        if (anios >= 0) edad.value = anios;
+        const [anio, mes, dia] = fecha.split('-').map(Number);
+        const nacimiento = Date.UTC(anio, mes - 1, dia);
+        const hoy = new Date();
+        const hoyUtc = Date.UTC(
+            hoy.getFullYear(),
+            hoy.getMonth(),
+            hoy.getDate()
+        );
+
+        const dias = Math.floor((hoyUtc - nacimiento) / 86400000);
+        edad.value = (dias / 365.2425).toFixed(2);
     }
 
     async function openEdit() {
@@ -321,6 +323,9 @@
 
         const form = $('#form-edicion');
         actualizarEdadDesdeNacimiento(form);
+        form.elements.fechaNacidoEnFinca.addEventListener('input', () => {
+            actualizarEdadDesdeNacimiento(form);
+        });
         form.elements.fechaNacidoEnFinca.addEventListener('change', () => {
             actualizarEdadDesdeNacimiento(form);
         });
