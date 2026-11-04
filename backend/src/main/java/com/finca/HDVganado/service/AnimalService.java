@@ -6,7 +6,9 @@ import com.finca.HDVganado.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import java.time.Period;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -535,10 +537,19 @@ public class AnimalService {
 
     private void calcularEdad(HojaDeVidaAnimal animal) {
         if (animal.getFechaNacidoEnFinca() != null) {
-            int edad = Period.between(
+            long dias = ChronoUnit.DAYS.between(
                     animal.getFechaNacidoEnFinca(),
                     LocalDate.now()
-            ).getYears();
+            );
+
+            if (dias < 0) {
+                throw new IllegalArgumentException(
+                        "La fecha de nacimiento no puede ser futura."
+                );
+            }
+
+            BigDecimal edad = BigDecimal.valueOf(dias)
+                    .divide(BigDecimal.valueOf(365.2425), 2, RoundingMode.HALF_UP);
 
             animal.setEdad(edad);
         }
