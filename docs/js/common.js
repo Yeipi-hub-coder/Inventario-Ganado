@@ -34,7 +34,7 @@ function normalizeAnimal(d) {
   }
   return d && typeof d === 'object' ? d : null;
 }
-const isActive = a => String(val(a, 'estaEnFinca') || '').toUpperCase() === 'SI' && isEmpty(val(a, 'vendido'));
+const isActive = a => isEmpty(val(a, 'vendido'));
 function estadoInfo(a) {
   const v = val(a, 'vendido');
   if (!isEmpty(v)) return { text: String(v), cls: /muerte/i.test(v) ? 'danger' : 'warn' };
