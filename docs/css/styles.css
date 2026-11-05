@@ -196,14 +196,7 @@ dialog::backdrop{background:rgba(20,35,26,.55)}
     border-radius: 10px;
 }
 
-/* Inventario: filtros persistentes y navegación por páginas */
-.inventory-filters {
-  position: sticky;
-  top: 76px;
-  z-index: 15;
-  max-height: calc(100vh - 92px);
-  overflow-y: auto;
-}
+/* Inventario: navegación por páginas */
 .pagination {
   display: flex;
   align-items: center;
@@ -211,10 +204,4 @@ dialog::backdrop{background:rgba(20,35,26,.55)}
   flex-wrap: wrap;
   gap: .8rem;
   padding: 1rem .25rem .2rem;
-}
-@media (max-width: 900px) {
-  .inventory-filters {
-    top: 58px;
-    max-height: calc(100vh - 70px);
-  }
 }
