@@ -423,10 +423,9 @@ public class AnimalService {
 
     private void validarAnimalActivo(HojaDeVidaAnimal animal) {
 
-        if (!"SI".equals(animal.getEstaEnFinca())
-                || animal.getVendido() != null) {
+        if (animal.getVendido() != null) {
             throw new IllegalArgumentException(
-                    "El animal no está disponible en el inventario."
+                    "No se puede registrar una venta o fallecimiento para un animal que ya tiene un estado de salida."
             );
         }
     }
