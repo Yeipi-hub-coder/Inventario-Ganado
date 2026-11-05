@@ -29,8 +29,7 @@ public interface AnimalRepository
             FROM HojaDeVidaAnimal
             GROUP BY Codigo3
         ) v ON a.Codigo1 = v.UltimoCodigo
-        WHERE a.EstaEnFinca = 'SI'
-          AND a.Vendido IS NULL
+        WHERE a.Vendido IS NULL
         ORDER BY a.Codigo3
         """, nativeQuery = true)
     List<HojaDeVidaAnimal> inventarioActual();
@@ -78,7 +77,7 @@ public interface AnimalRepository
     ) v ON a.Codigo1 = v.UltimoCodigo
     WHERE (
         (:estado = 'VENDIDAS' AND a.Vendido = 'Vendido')
-        OR (:estado = 'ACTUAL' AND a.EstaEnFinca = 'SI' AND a.Vendido IS NULL)
+        OR (:estado = 'ACTUAL' AND a.Vendido IS NULL)
       )
       AND (:categoria IS NULL OR a.Categoria = :categoria)
       AND (:sexo IS NULL OR a.Sexo = :sexo)
@@ -87,6 +86,7 @@ public interface AnimalRepository
       AND (:fin IS NULL OR a.FechaIngresoFinca <= :fin)
       AND (:nacimientoDesde IS NULL OR a.FechaNacidoEnFinca >= :nacimientoDesde)
       AND (:nacimientoHasta IS NULL OR a.FechaNacidoEnFinca <= :nacimientoHasta)
+      AND (:ubicacion IS NULL OR (:ubicacion = 'OTRAS' AND a.EstaEnOtrasFincas = 'SI'))
     ORDER BY a.Codigo3
     """, nativeQuery = true)
     List<HojaDeVidaAnimal> filtrarInventario(
@@ -97,7 +97,8 @@ public interface AnimalRepository
             @Param("inicio") LocalDate inicio,
             @Param("fin") LocalDate fin,
             @Param("nacimientoDesde") LocalDate nacimientoDesde,
-            @Param("nacimientoHasta") LocalDate nacimientoHasta
+            @Param("nacimientoHasta") LocalDate nacimientoHasta,
+            @Param("ubicacion") String ubicacion
     );
 
 
