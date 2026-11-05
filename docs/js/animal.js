@@ -98,8 +98,7 @@
             ${active ? '' : `
                 <div class="alert alert-warn">
                     Este animal ya no está activo en el inventario (${esc(e.text)}).
-                    No se pueden registrar ventas ni fallecimientos; la ficha y
-                    el historial siguen disponibles.
+                    La ficha y el historial siguen disponibles.
                 </div>
             `}
 
