@@ -16,10 +16,11 @@
     <header id="topbar" class="topbar"></header>
     <main id="content" class="content">
       <div class="page-head"><h1>Inventario actual</h1><p class="muted">Animales que están en la finca hoy (última versión de cada uno).</p></div>
-      <section class="card">
+      <section class="card inventory-filters">
         <form id="filtros" class="filters" novalidate>
           <div class="field"><label for="q">Buscar en la tabla</label><input id="q" type="search" placeholder="Código, nombre, raza…" autocomplete="off"></div>
-          <div class="field"><label for="estado">Estado del animal</label><select id="estado" name="estado"><option value="ACTUAL">En finca</option><option value="VENDIDAS">Vendidas</option></select></div>
+          <div class="field"><label for="estado">Estado del animal</label><select id="estado" name="estado"><option value="ACTUAL">Inventario general</option><option value="VENDIDAS">Vendidas</option></select></div>
+          <div class="field"><label for="ubicacion">Ubicación</label><select id="ubicacion" name="ubicacion"><option value="">Todas las ubicaciones</option><option value="OTRAS">Solo otras fincas</option></select></div>
           <div class="field"><label for="categoria">Categoría</label><select id="categoria" name="categoria"><option value="">Todas</option></select></div>
           <div class="field"><label for="sexo">Sexo</label><select id="sexo" name="sexo"><option value="">Todos</option><option value="HEMBRA">Hembra</option><option value="MACHO">Macho</option></select></div>
           <div class="field"><label for="raza">Raza</label><select id="raza" name="raza"><option value="">Todas</option></select></div>
@@ -39,6 +40,7 @@
         <div class="result-head"><h2>Resultados <span id="count" class="badge"></span></h2></div>
         <p id="q-note" class="muted" hidden>La búsqueda de texto solo cambia lo que ve en pantalla. El CSV contiene todos los resultados de los filtros aplicados.</p>
         <div id="resultado" aria-live="polite"></div>
+        <div id="paginacion" class="pagination" hidden></div>
       </section>
     </main>
   </div>
