@@ -117,12 +117,15 @@ public class AnimalService {
             Set<String> fechasBorradas) {
 
         HojaDeVidaAnimal actual = obtenerActual(codigo3);
-        validarAnimalActivo(actual);
-
-        if (cambios.getEstaEnFinca() != null
-                || cambios.getVendido() != null) {
+        if (actual.getVendido() != null) {
             throw new IllegalArgumentException(
-                    "No puedes modificar estos campos directamente."
+                    "No se puede editar un animal vendido o fallecido."
+            );
+        }
+
+        if (cambios.getVendido() != null) {
+            throw new IllegalArgumentException(
+                    "El campo de salida solo se modifica mediante las opciones de venta o fallecimiento."
             );
         }
 
@@ -289,6 +292,10 @@ public class AnimalService {
             );
         }
 
+        if (cambios.getEstaEnFinca() != null) {
+            destino.setEstaEnFinca(cambios.getEstaEnFinca());
+        }
+
         if (cambios.getEstaEnOtrasFincas() != null) {
             destino.setEstaEnOtrasFincas(
                     cambios.getEstaEnOtrasFincas()
@@ -449,7 +456,8 @@ public class AnimalService {
             LocalDate inicio,
             LocalDate fin,
             LocalDate nacimientoDesde,
-            LocalDate nacimientoHasta) {
+            LocalDate nacimientoHasta,
+            String ubicacion) {
 
         if (!"ACTUAL".equals(estado) && !"VENDIDAS".equals(estado)) {
             throw new IllegalArgumentException("El estado debe ser ACTUAL o VENDIDAS.");
@@ -468,9 +476,13 @@ public class AnimalService {
             );
         }
 
+        if (ubicacion != null && !"OTRAS".equals(ubicacion)) {
+            throw new IllegalArgumentException("La ubicación debe ser OTRAS o estar vacía.");
+        }
+
         return animalRepository.filtrarInventario(
                 estado, categoria, sexo, raza, inicio, fin,
-                nacimientoDesde, nacimientoHasta
+                nacimientoDesde, nacimientoHasta, ubicacion
         );
     }
 
