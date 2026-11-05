@@ -212,7 +212,7 @@ const FIELDS = [
   { key: 'categoria', label: 'Categoría', type: 'text', list: 'lista-categorias', section: 2 },
   { key: 'fechaIngresoFinca', label: 'Fecha de ingreso a la finca', type: 'date', past: true, section: 1 },
   { key: 'fechaNacidoEnFinca', label: 'Fecha de nacimiento (finca)', type: 'date', past: true, section: 1 },
-  { key: 'estaEnFinca', label: '¿Está en la finca?', type: 'select', options: SI_NO, def: 'SI', section: 1, required: true, noEdit: true },
+  { key: 'estaEnFinca', label: '¿Está en la finca?', type: 'select', options: SI_NO, def: 'SI', section: 1, required: true },
   { key: 'estaEnOtrasFincas', label: '¿Está en otras fincas?', type: 'select', options: SI_NO, def: 'NO', section: 1 },
   { key: 'carneOLeche', label: 'Tipo de producción', type: 'select', options: [['CARNE', 'Carne'], ['LECHE', 'Leche'], ['DOBLE PROPOSITO', 'Doble propósito']], section: 1 },
   { key: 'vendido', label: 'Salida (campo Vendido)', type: 'text', section: 1, noForm: true, noEdit: true },
